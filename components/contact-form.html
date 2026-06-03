@@ -1,0 +1,83 @@
+<!-- dedalo-core/components/contact-form.html -->
+<div class="contact-form-wrapper">
+    <h2>Get in touch</h2>
+    <p>Bookings, press, collaborations, or general inquiries.</p>
+    
+    <form action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST" class="contact-form">
+        
+        <div class="form-group">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="subject">Subject</label>
+            <select id="subject" name="subject" required>
+                <option value="">Select...</option>
+                <option value="Booking">Booking / Live Event</option>
+                <option value="Press">Press / Interview</option>
+                <option value="Collaboration">Collaboration / Remix</option>
+                <option value="Release">Release Inquiry</option>
+                <option value="General">General Message</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="6" required></textarea>
+        </div>
+        
+        <!-- Hidden fields for better context -->
+        <input type="hidden" name="artist" value="ARTIST_NAME_HERE">
+        <input type="hidden" name="_subject" value="New message from {{artist}} website">
+        <input type="hidden" name="_next" value="https://DOMAIN/thanks.html">
+        
+        <button type="submit" class="submit-btn">Send Message</button>
+    </form>
+    
+    <p class="form-note">We usually reply within 48 hours.</p>
+</div>
+
+<style>
+    .contact-form {
+        max-width: 600px;
+        margin: 2rem auto;
+    }
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #444;
+        background: #1a1a1a;
+        color: #fff;
+        border-radius: 6px;
+    }
+    .submit-btn {
+        background: #fff;
+        color: #000;
+        padding: 14px 32px;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.2s;
+    }
+    .submit-btn:hover {
+        background: #ff00ff;
+        color: #fff;
+    }
+</style>
