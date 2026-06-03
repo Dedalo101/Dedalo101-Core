@@ -1,0 +1,32 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "tailwindCSS.emmetCompletions": true,
+  "files.associations": {
+    "*.html": "html",
+    "*.css": "tailwindcss"
+  },
+  "explorer.excludeGitIgnore": true,
+
+  // Performance & AI related
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/pb_data": true,
+    "**/dist": true
+  },
+  "files.watcherExclude": {
+    "**/pb_data/**": true
+  },
+
+  // Better Git experience
+  "git.enableSmartCommit": true,
+  "git.autofetch": true,
+
+  // Terminal settings (for Grok Build)
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "terminal.integrated.scrollback": 10000
+}

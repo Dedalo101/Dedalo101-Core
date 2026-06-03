@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Dedalo101 — Artist Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dedalo: {
+              bg: "#08080c",
+              card: "#12121a",
+              border: "#1f1f2e",
+              accent: "#7c5cff",
+              "accent-hover": "#9b7fff",
+              muted: "#8b8b9e",
+              danger: "#ff5c7a",
+              success: "#3dd68c",
+            },
+          },
+          fontFamily: { sans: ["DM Sans", "system-ui", "sans-serif"] },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { background: #08080c; }
+    .dedalo-glow {
+      background:
+        radial-gradient(ellipse 70% 45% at 50% -10%, rgba(124, 92, 255, 0.2), transparent),
+        radial-gradient(ellipse 50% 30% at 100% 100%, rgba(61, 214, 140, 0.06), transparent);
+    }
+    [aria-busy="true"] { pointer-events: none; opacity: 0.65; }
+  </style>
+</head>
+<body class="h-full font-sans text-gray-100 antialiased dedalo-glow min-h-screen">
+  <!-- Global toast container -->
+  <div id="toast-root" class="fixed bottom-4 right-4 z-[200] flex flex-col gap-2 max-w-sm w-full pointer-events-none" aria-live="polite"></div>
+
+  <!-- Loading overlay -->
+  <div id="global-loader" class="hidden fixed inset-0 z-[150] flex items-center justify-center bg-black/60 backdrop-blur-sm" role="status" aria-label="Loading">
+    <div class="flex flex-col items-center gap-3 rounded-xl bg-dedalo-card border border-dedalo-border px-8 py-6 shadow-2xl">
+      <svg class="animate-spin h-8 w-8 text-dedalo-accent" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      <p id="loader-message" class="text-sm text-dedalo-muted">Loading…</p>
+    </div>
+  </div>
+
+  <div class="relative z-10 mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+    <!-- ========== LOGIN ========== -->
+    <section id="view-login" class="mx-auto max-w-md">
+      <div class="mb-6 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-dedalo-accent">
+        <span class="inline-block h-2 w-2 rotate-45 bg-dedalo-accent rounded-sm"></span>
+        Dedalo101
+      </div>
+      <div class="rounded-2xl border border-dedalo-border bg-dedalo-card/90 p-8 shadow-2xl backdrop-blur">
+        <h1 class="text-2xl font-semibold tracking-tight">Artist Dashboard</h1>
+        <p class="mt-1 text-sm text-dedalo-muted">Sign in to manage your events and releases.</p>
+        <form id="form-login" class="mt-8 space-y-4" novalidate>
+          <div>
+            <label for="login-email" class="mb-1 block text-xs font-medium text-dedalo-muted">Email</label>
+            <input type="email" id="login-email" required autocomplete="email"
+              class="w-full rounded-lg border border-dedalo-border bg-[#0c0c12] px-3 py-2.5 text-sm focus:border-dedalo-accent focus:outline-none focus:ring-2 focus:ring-dedalo-accent/30" />
+          </div>
+          <div>
+            <label for="login-password" class="mb-1 block text-xs font-medium text-dedalo-muted">Password</label>
+            <input type="password" id="login-password" required autocomplete="current-password"
+              class="w-full rounded-lg border border-dedalo-border bg-[#0c0c12] px-3 py-2.5 text-sm focus:border-dedalo-accent focus:outline-none focus:ring-2 focus:ring-dedalo-accent/30" />
+          </div>
+          <p id="login-error" class="hidden text-sm text-dedalo-danger" role="alert"></p>
+          <button type="submit" id="btn-login"
+            class="w-full rounded-lg bg-dedalo-accent py-2.5 text-sm font-medium text-white transition hover:bg-dedalo-accent-hover disabled:opacity-50">
+            Sign in
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ========== DASHBOARD ========== -->
+    <section id="view-dashboard" class="hidden">
+      <header class="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-dedalo-border pb-6">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-widest text-dedalo-accent">Dedalo101</p>
+          <h1 class="mt-1 text-2xl font-semibold">
+            <span id="header-artist-name">Dashboard</span>
+          </h1>
+          <p id="header-artist-email" class="text-sm text-dedalo-muted"></p>
+        </div>
+        <div class="flex gap-2">
+          <button type="button" id="btn-refresh"
+            class="rounded-lg border border-dedalo-border px-3 py-2 text-sm text-dedalo-muted transition hover:border-gray-500 hover:text-white">
+            Refresh
+          </button>
+          <button type="button" id="btn-logout"
+            class="rounded-lg border border-dedalo-border px-3 py-2 text-sm text-dedalo-muted transition hover:border-dedalo-danger/50 hover:text-dedalo-danger">
+            Sign out
+          </button>
+        </div>
+      </header>
+
+      <!-- Stats -->
+      <div class="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+        <div class="rounded-xl border border-dedalo-border bg-dedalo-card p-4">
+          <p class="text-xs text-dedalo-muted">Total events</p>
+          <p id="stat-events-total" class="mt-1 text-2xl font-semibold">—</p>
+        </div>
+        <div class="rounded-xl border border-dedalo-border bg-dedalo-card p-4">
+          <p class="text-xs text-dedalo-muted">Published events</p>
+          <p id="stat-events-published" class="mt-1 text-2xl font-semibold text-dedalo-success">—</p>
+        </div>
+        <div class="rounded-xl border border-dedalo-border bg-dedalo-card p-4">
+          <p class="text-xs text-dedalo-muted">Total releases</p>
+          <p id="stat-releases-total" class="mt-1 text-2xl font-semibold">—</p>
+        </div>
+        <div class="rounded-xl border border-dedalo-border bg-dedalo-card p-4">
+          <p class="text-xs text-dedalo-muted">Published releases</p>
+          <p id="stat-releases-published" class="mt-1 text-2xl font-semibold text-dedalo-success">—</p>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <nav class="mb-6 inline-flex rounded-lg bg-[#0c0c12] p-1" role="tablist">
+        <button type="button" data-tab="events" role="tab" aria-selected="true"
+          class="tab-btn rounded-md px-4 py-2 text-sm font-medium text-white bg-dedalo-card shadow">Events</button>
+        <button type="button" data-tab="releases" role="tab" aria-selected="false"
+          class="tab-btn rounded-md px-4 py-2 text-sm font-medium text-dedalo-muted hover:text-white">Releases</button>
+      </nav>
+
+      <!-- Events panel -->
+      <div id="panel-events" role="tabpanel">
+        <div class="mb-4 flex items-center justify-between">
+          <h2 class="text-lg font-semibold">Events</h2>
+          <button type="button" id="btn-new-event"
+            class="rounded-lg bg-dedalo-accent px-3 py-2 text-sm font-medium text-white hover:bg-dedalo-accent-hover">
+            Add event
+          </button>
+        </div>
+        <div id="events-list" class="space-y-3"></div>
+      </div>
+
+      <!-- Releases panel -->
+      <div id="panel-releases" class="hidden" role="tabpanel">
+        <div class="mb-4 flex items-center justify-between">
+          <h2 class="text-lg font-semibold">Releases</h2>
+          <button type="button" id="btn-new-release"
+            class="rounded-lg bg-dedalo-accent px-3 py-2 text-sm font-medium text-white hover:bg-dedalo-accent-hover">
+            Add release
+          </button>
+        </div>
+        <div id="releases-list" class="space-y-3"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Event modal -->
+  <div id="modal-event" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="modal-event-title">
+    <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-dedalo-border bg-dedalo-card p-6 shadow-2xl">
+      <div class="mb-4 flex items-center justify-between">
+        <h2 id="modal-event-title" class="text-lg font-semibold">Event</h2>
+        <button type="button" data-close="modal-event" class="rounded p-1 text-dedalo-muted hover:bg-white/5 hover:text-white" aria-label="Close">&times;</button>
+      </div>
+      <form id="form-event" class="space-y-4">
+        <input type="hidden" id="event-id" />
+        <p id="event-form-error" class="hidden text-sm text-dedalo-danger" role="alert"></p>
+        <div>
+          <label for="event-title" class="mb-1 block text-xs font-medium text-dedalo-muted">Title *</label>
+          <input type="text" id="event-title" required maxlength="200" class="field-input" />
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label for="event-venue" class="mb-1 block text-xs font-medium text-dedalo-muted">Venue</label>
+            <input type="text" id="event-venue" maxlength="200" class="field-input" />
+          </div>
+          <div>
+            <label for="event-city" class="mb-1 block text-xs font-medium text-dedalo-muted">City</label>
+            <input type="text" id="event-city" maxlength="120" class="field-input" />
+          </div>
+        </div>
+        <div>
+          <label for="event-country" class="mb-1 block text-xs font-medium text-dedalo-muted">Country</label>
+          <input type="text" id="event-country" maxlength="80" class="field-input" />
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label for="event-date-start" class="mb-1 block text-xs font-medium text-dedalo-muted">Start date *</label>
+            <input type="date" id="event-date-start" required class="field-input" />
+          </div>
+          <div>
+            <label for="event-date-end" class="mb-1 block text-xs font-medium text-dedalo-muted">End date</label>
+            <input type="date" id="event-date-end" class="field-input" />
+          </div>
+        </div>
+        <div>
+          <label for="event-ticket-url" class="mb-1 block text-xs font-medium text-dedalo-muted">Ticket URL</label>
+          <input type="url" id="event-ticket-url" placeholder="https://" class="field-input" />
+        </div>
+        <div>
+          <label for="event-description" class="mb-1 block text-xs font-medium text-dedalo-muted">Description</label>
+          <textarea id="event-description" rows="3" class="field-input"></textarea>
+        </div>
+        <label class="flex items-center gap-2 text-sm">
+          <input type="checkbox" id="event-published" class="rounded border-dedalo-border bg-[#0c0c12] text-dedalo-accent focus:ring-dedalo-accent/30" />
+          Published (visible on static site after build)
+        </label>
+        <div class="flex justify-end gap-2 border-t border-dedalo-border pt-4">
+          <button type="button" data-close="modal-event" class="btn-secondary">Cancel</button>
+          <button type="submit" id="btn-save-event" class="btn-primary">Save event</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Release modal -->
+  <div id="modal-release" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="modal-release-title">
+    <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-dedalo-border bg-dedalo-card p-6 shadow-2xl">
+      <div class="mb-4 flex items-center justify-between">
+        <h2 id="modal-release-title" class="text-lg font-semibold">Release</h2>
+        <button type="button" data-close="modal-release" class="rounded p-1 text-dedalo-muted hover:bg-white/5 hover:text-white" aria-label="Close">&times;</button>
+      </div>
+      <form id="form-release" class="space-y-4">
+        <input type="hidden" id="release-id" />
+        <p id="release-form-error" class="hidden text-sm text-dedalo-danger" role="alert"></p>
+        <div>
+          <label for="release-title" class="mb-1 block text-xs font-medium text-dedalo-muted">Title *</label>
+          <input type="text" id="release-title" required maxlength="200" class="field-input" />
+        </div>
+        <div>
+          <label for="release-slug" class="mb-1 block text-xs font-medium text-dedalo-muted">Slug *</label>
+          <input type="text" id="release-slug" required pattern="[a-z0-9-]+" maxlength="120" title="Lowercase letters, numbers, hyphens only" class="field-input" />
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label for="release-date" class="mb-1 block text-xs font-medium text-dedalo-muted">Release date *</label>
+            <input type="date" id="release-date" required class="field-input" />
+          </div>
+          <div>
+            <label for="release-format" class="mb-1 block text-xs font-medium text-dedalo-muted">Format</label>
+            <select id="release-format" class="field-input">
+              <option value="">—</option>
+              <option value="single">Single</option>
+              <option value="ep">EP</option>
+              <option value="album">Album</option>
+              <option value="compilation">Compilation</option>
+              <option value="remix">Remix</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label for="release-label" class="mb-1 block text-xs font-medium text-dedalo-muted">Label</label>
+            <input type="text" id="release-label" maxlength="120" class="field-input" />
+          </div>
+          <div>
+            <label for="release-catalog" class="mb-1 block text-xs font-medium text-dedalo-muted">Catalog #</label>
+            <input type="text" id="release-catalog" maxlength="64" class="field-input" />
+          </div>
+        </div>
+        <div>
+          <label for="release-stream-url" class="mb-1 block text-xs font-medium text-dedalo-muted">Stream URL</label>
+          <input type="url" id="release-stream-url" placeholder="https://" class="field-input" />
+        </div>
+        <div>
+          <label for="release-buy-url" class="mb-1 block text-xs font-medium text-dedalo-muted">Buy URL</label>
+          <input type="url" id="release-buy-url" placeholder="https://" class="field-input" />
+        </div>
+        <div>
+          <label for="release-description" class="mb-1 block text-xs font-medium text-dedalo-muted">Description</label>
+          <textarea id="release-description" rows="3" class="field-input"></textarea>
+        </div>
+        <label class="flex items-center gap-2 text-sm">
+          <input type="checkbox" id="release-published" class="rounded border-dedalo-border bg-[#0c0c12] text-dedalo-accent focus:ring-dedalo-accent/30" />
+          Published (visible on static site after build)
+        </label>
+        <div class="flex justify-end gap-2 border-t border-dedalo-border pt-4">
+          <button type="button" data-close="modal-release" class="btn-secondary">Cancel</button>
+          <button type="submit" id="btn-save-release" class="btn-primary">Save release</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete confirmation -->
+  <div id="modal-delete" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" role="alertdialog" aria-modal="true">
+    <div class="w-full max-w-sm rounded-2xl border border-dedalo-border bg-dedalo-card p-6 shadow-2xl">
+      <h2 class="text-lg font-semibold">Delete item?</h2>
+      <p id="delete-message" class="mt-2 text-sm text-dedalo-muted">This cannot be undone.</p>
+      <p id="delete-error" class="mt-2 hidden text-sm text-dedalo-danger" role="alert"></p>
+      <div class="mt-6 flex justify-end gap-2">
+        <button type="button" data-close="modal-delete" class="btn-secondary">Cancel</button>
+        <button type="button" id="btn-confirm-delete" class="rounded-lg bg-dedalo-danger/20 px-4 py-2 text-sm font-medium text-dedalo-danger hover:bg-dedalo-danger/30">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .field-input {
+      @apply w-full rounded-lg border border-dedalo-border bg-[#0c0c12] px-3 py-2 text-sm focus:border-dedalo-accent focus:outline-none focus:ring-2 focus:ring-dedalo-accent/30;
+    }
+    .btn-primary {
+      @apply rounded-lg bg-dedalo-accent px-4 py-2 text-sm font-medium text-white hover:bg-dedalo-accent-hover disabled:opacity-50;
+    }
+    .btn-secondary {
+      @apply rounded-lg border border-dedalo-border px-4 py-2 text-sm text-dedalo-muted hover:text-white;
+    }
+  </style>
+
+  <script>
+    window.DEDALO_PB_URL = window.DEDALO_PB_URL || "https://pb.dedalo101.com";
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/pocketbase@0.22.0/dist/pocketbase.umd.js"></script>
+  <script src="dashboard-app.js"></script>
+</body>
+</html>
