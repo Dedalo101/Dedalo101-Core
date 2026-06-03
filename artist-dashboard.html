@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dedalo101 Artist Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/pocketbase@0.21.0/dist/pocketbase.umd.js"></script>
+    <style>
+        body { background: #09090b; color: #f4f4f5; }
+        .card { background: #18181b; }
+    </style>
+</head>
+<body class="min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-4xl font-bold mb-8 text-center">Dedalo101 Artist Dashboard</h1>
+
+        <!-- Login -->
+        <div id="login" class="max-w-md mx-auto card p-8 rounded-3xl">
+            <h2 class="text-2xl mb-6">Login to your artist portal</h2>
+            <input id="email" type="email" placeholder="Email" class="w-full p-4 bg-zinc-900 rounded-2xl mb-3">
+            <input id="password" type="password" placeholder="Password" class="w-full p-4 bg-zinc-900 rounded-2xl mb-6">
+            <button onclick="login()" class="w-full py-4 bg-white text-black font-bold rounded-2xl">Login</button>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="main" class="hidden">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold" id="welcome"></h2>
+                    <p class="text-zinc-500" id="artist-slug"></p>
+                </div>
+                <button onclick="logout()" class="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-2xl">Logout</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <div class="card p-6 rounded-3xl text-center">
+                    <div class="text-5xl font-bold text-emerald-400" id="events-count">0</div>
+                    <div class="text-zinc-400">Upcoming Events</div>
+                </div>
+                <div class="card p-6 rounded-3xl text-center">
+                    <div class="text-5xl font-bold text-sky-400" id="releases-count">0</div>
+                    <div class="text-zinc-400">Releases</div>
+                </div>
+                <div class="card p-6 rounded-3xl text-center">
+                    <div class="text-5xl font-bold text-purple-400" id="mixes-count">0</div>
+                    <div class="text-zinc-400">Mixes</div>
+                </div>
+            </div>
+
+            <!-- Events Section -->
+            <div class="card p-8 rounded-3xl mb-10">
+                <div class="flex justify-between mb-6">
+                    <h3 class="text-2xl font-semibold">Events</h3>
+                    <button onclick="showEventModal()" class="px-5 py-2.5 bg-white text-black rounded-2xl font-medium">+ New Event</button>
+                </div>
+                <div id="events-list" class="space-y-4"></div>
+            </div>
+
+            <!-- Releases Section -->
+            <div class="card p-8 rounded-3xl">
+                <div class="flex justify-between mb-6">
+                    <h3 class="text-2xl font-semibold">Releases</h3>
+                    <button onclick="showReleaseModal()" class="px-5 py-2.5 bg-white text-black rounded-2xl font-medium">+ New Release</button>
+                </div>
+                <div id="releases-list" class="space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div id="event-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center">
+        <div class="bg-zinc-900 p-8 rounded-3xl w-full max-w-lg">
+            <h3 class="text-2xl mb-6">New Event</h3>
+            <input id="event-title" placeholder="Event Title" class="w-full p-4 bg-zinc-800 rounded-2xl mb-3">
+            <input id="event-date" type="datetime-local" class="w-full p-4 bg-zinc-800 rounded-2xl mb-3">
+            <input id="event-venue" placeholder="Venue / City" class="w-full p-4 bg-zinc-800 rounded-2xl mb-6">
+            <textarea id="event-desc" placeholder="Description" rows="4" class="w-full p-4 bg-zinc-800 rounded-2xl mb-6"></textarea>
+            <div class="flex gap-4">
+                <button onclick="hideEventModal()" class="flex-1 py-4 border border-zinc-700 rounded-2xl">Cancel</button>
+                <button onclick="saveEvent()" class="flex-1 py-4 bg-emerald-600 rounded-2xl">Save Event</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Release Modal -->
+    <div id="release-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center">
+        <div class="bg-zinc-900 p-8 rounded-3xl w-full max-w-lg">
+            <h3 class="text-2xl mb-6">New Release</h3>
+            <input id="release-title" placeholder="Release Title" class="w-full p-4 bg-zinc-800 rounded-2xl mb-3">
+            <input id="release-date" type="date" class="w-full p-4 bg-zinc-800 rounded-2xl mb-6">
+            <input id="jumpstr-link" placeholder="Jumpstr.io Link" class="w-full p-4 bg-zinc-800 rounded-2xl mb-6">
+            <div class="flex gap-4">
+                <button onclick="hideReleaseModal()" class="flex-1 py-4 border border-zinc-700 rounded-2xl">Cancel</button>
+                <button onclick="saveRelease()" class="flex-1 py-4 bg-sky-600 rounded-2xl">Save Release</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const pb = new PocketBase('https://YOUR-POCKETBASE-DOMAIN.com');
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            try {
+                await pb.collection('users').authWithPassword(email, pass);
+                showDashboard();
+            } catch (e) { alert("Login failed: " + e.message); }
+        }
+
+        function logout() {
+            pb.authStore.clear();
+            location.reload();
+        }
+
+        async function showDashboard() {
+            document.getElementById('login').classList.add('hidden');
+            document.getElementById('main').classList.remove('hidden');
+
+            const user = pb.authStore.model;
+            document.getElementById('welcome').textContent = user.name || user.email;
+
+            await loadCounts();
+            await loadEvents();
+            await loadReleases();
+        }
+
+        async function loadCounts() { /* Add simple counts */ }
+
+        async function loadEvents() {
+            const res = await pb.collection('events').getFullList({ filter: `artist = "${pb.authStore.model.id}"`, sort: '-date' });
+            const container = document.getElementById('events-list');
+            container.innerHTML = res.map(e => `
+                <div class="card p-5 rounded-2xl flex justify-between items-center">
+                    <div>
+                        <div class="font-medium">${e.title}</div>
+                        <div class="text-sm text-zinc-400">${new Date(e.date).toLocaleDateString()} • ${e.venue}</div>
+                    </div>
+                    <button onclick="deleteEvent('${e.id}')" class="text-red-400 text-sm">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        async function loadReleases() {
+            const res = await pb.collection('releases').getFullList({ filter: `artist = "${pb.authStore.model.id}"`, sort: '-release_date' });
+            const container = document.getElementById('releases-list');
+            container.innerHTML = res.map(r => `
+                <div class="card p-5 rounded-2xl">
+                    <div class="font-medium">${r.title}</div>
+                    <div class="text-sm text-zinc-400">${r.release_date}</div>
+                    ${r.jumpstr_link ? `<a href="${r.jumpstr_link}" target="_blank" class="text-sky-400 text-sm">Jumpstr Link</a>` : ''}
+                </div>
+            `).join('');
+        }
+
+        async function deleteEvent(id) {
+            if (confirm('Delete event?')) {
+                await pb.collection('events').delete(id);
+                loadEvents();
+            }
+        }
+
+        function showEventModal() { document.getElementById('event-modal').classList.remove('hidden'); }
+        function hideEventModal() { document.getElementById('event-modal').classList.add('hidden'); }
+
+        async function saveEvent() {
+            await pb.collection('events').create({
+                title: document.getElementById('event-title').value,
+                date: document.getElementById('event-date').value,
+                venue: document.getElementById('event-venue').value,
+                description: document.getElementById('event-desc').value,
+                artist: pb.authStore.model.id
+            });
+            hideEventModal();
+            loadEvents();
+        }
+
+        function showReleaseModal() { document.getElementById('release-modal').classList.remove('hidden'); }
+        function hideReleaseModal() { document.getElementById('release-modal').classList.add('hidden'); }
+
+        async function saveRelease() {
+            await pb.collection('releases').create({
+                title: document.getElementById('release-title').value,
+                release_date: document.getElementById('release-date').value,
+                jumpstr_link: document.getElementById('jumpstr-link').value,
+                artist: pb.authStore.model.id
+            });
+            hideReleaseModal();
+            loadReleases();
+        }
+
+        if (pb.authStore.isValid) showDashboard();
+    </script>
+</body>
+</html>
