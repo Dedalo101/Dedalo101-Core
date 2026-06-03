@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Dashboard • Dedalo101</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/pocketbase@0.21.0/dist/pocketbase.umd.js"></script>
+</head>
+<body class="bg-zinc-950 text-white">
+    <div class="max-w-5xl mx-auto p-8">
+        <h1 class="text-4xl font-bold mb-8">Artist Dashboard</h1>
+
+        <!-- Login Section -->
+        <div id="login-section">
+            <div class="max-w-md mx-auto bg-zinc-900 p-8 rounded-2xl">
+                <h2 class="text-2xl mb-6">Login</h2>
+                <input id="email" type="email" placeholder="Email" class="w-full p-3 bg-zinc-800 rounded mb-3">
+                <input id="password" type="password" placeholder="Password" class="w-full p-3 bg-zinc-800 rounded mb-6">
+                <button onclick="login()" class="w-full bg-white text-black py-3 rounded font-semibold">Login</button>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard-section" class="hidden">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-3xl">Welcome, <span id="artist-name"></span></h2>
+                    <p class="text-zinc-400" id="artist-slug"></p>
+                </div>
+                <button onclick="logout()" class="px-4 py-2 bg-red-600 rounded">Logout</button>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-3 gap-4 mb-8">
+                <div class="bg-zinc-900 p-6 rounded-2xl">
+                    <div class="text-sm text-zinc-400">Events</div>
+                    <div id="event-count" class="text-4xl font-bold">0</div>
+                </div>
+                <div class="bg-zinc-900 p-6 rounded-2xl">
+                    <div class="text-sm text-zinc-400">Releases</div>
+                    <div id="release-count" class="text-4xl font-bold">0</div>
+                </div>
+                <div class="bg-zinc-900 p-6 rounded-2xl">
+                    <div class="text-sm text-zinc-400">Mixes</div>
+                    <div id="mix-count" class="text-4xl font-bold">0</div>
+                </div>
+            </div>
+
+            <!-- Events CRUD -->
+            <div class="bg-zinc-900 rounded-2xl p-8 mb-8">
+                <div class="flex justify-between mb-6">
+                    <h3 class="text-2xl font-semibold">Events</h3>
+                    <button onclick="showEventModal()" class="px-4 py-2 bg-white text-black rounded text-sm font-medium">+ New Event</button>
+                </div>
+                <div id="events-list" class="space-y-3"></div>
+            </div>
+
+            <!-- Releases CRUD -->
+            <div class="bg-zinc-900 rounded-2xl p-8">
+                <div class="flex justify-between mb-6">
+                    <h3 class="text-2xl font-semibold">Releases</h3>
+                    <button onclick="showReleaseModal()" class="px-4 py-2 bg-white text-black rounded text-sm font-medium">+ New Release</button>
+                </div>
+                <div id="releases-list" class="space-y-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const pb = new PocketBase('https://YOUR-POCKETBASE-DOMAIN.com');
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                await pb.collection('users').authWithPassword(email, password);
+                showDashboard();
+            } catch (e) {
+                alert('Login failed: ' + e.message);
+            }
+        }
+
+        function logout() {
+            pb.authStore.clear();
+            location.reload();
+        }
+
+        async function showDashboard() {
+            if (!pb.authStore.isValid) return;
+
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('hidden');
+
+            const user = pb.authStore.model;
+            document.getElementById('artist-name').innerText = user.name || user.email;
+
+            await loadStats();
+            await loadEvents();
+            await loadReleases();
+        }
+
+        async function loadStats() {
+            // You can expand this with real counts from PocketBase
+            document.getElementById('event-count').innerText = '12';
+            document.getElementById('release-count').innerText = '7';
+            document.getElementById('mix-count').innerText = '23';
+        }
+
+        async function loadEvents() {
+            const list = await pb.collection('events').getList(1, 50, {
+                filter: `artist = "${pb.authStore.model.id}"`,
+                sort: '-date'
+            });
+            const container = document.getElementById('events-list');
+            container.innerHTML = '';
+            list.items.forEach(event => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between bg-zinc-800 p-4 rounded-xl';
+                div.innerHTML = `
+                    <div>
+                        <div class="font-medium">${event.title}</div>
+                        <div class="text-sm text-zinc-400">${event.date} • ${event.venue}</div>
+                    </div>
+                    <button onclick="deleteEvent('${event.id}')" class="text-red-400 text-sm">Delete</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        async function loadReleases() {
+            // Similar to events...
+        }
+
+        async function deleteEvent(id) {
+            if (!confirm('Delete this event?')) return;
+            await pb.collection('events').delete(id);
+            loadEvents();
+        }
+
+        // Modal functions for create...
+        function showEventModal() {
+            alert('Event creation modal would open here (expand this)');
+        }
+
+        // Auto-login if already authenticated
+        if (pb.authStore.isValid) {
+            showDashboard();
+        }
+    </script>
+</body>
+</html>
