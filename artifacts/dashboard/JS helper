@@ -1,0 +1,16 @@
+// dedalo-core/js/pocketbase-client.js
+const pb = new PocketBase('https://your-pocketbase.com');
+
+export async function getArtistEvents(artistId) {
+    return await pb.collection('events').getFullList({
+        filter: `artist = "${artistId}"`,
+        sort: '-date'
+    });
+}
+
+export async function getArtistReleases(artistId) {
+    return await pb.collection('releases').getFullList({
+        filter: `artist = "${artistId}"`,
+        sort: '-release_date'
+    });
+}
