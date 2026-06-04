@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ── Primary SEO ── -->
+  <title>Nahuel | Sculpture-Photography-Painting. VINYL DJ-sets</title>
+  <meta name="description"  content="Official site of Nahuel Mendez Isla — DJ, promoter, selector and art director. ART WORKS archive, latest music and direct inquiry form.">
+  <meta name="keywords"     content="Nahuel, Nahuel Mendez, DJ, promoter, selector, art director, electronic music, vinyl, underground, bookings, visual art">
+  <meta name="author"       content="Nahuel Mendez Isla">
+  <link rel="canonical"     href="https://nahuel.club/">
+
+  <!-- ── Open Graph ── -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://nahuel.club/">
+  <meta property="og:site_name"   content="NAHUEL">
+  <meta property="og:title"       content="Nahuel | Sculpture-Photography-Painting. VINYL DJ-sets">
+  <meta property="og:description" content="Official site of Nahuel — DJ, promoter, selector and art director. Bookings, ART WORKS and music.">
+  <meta property="og:image"       content="https://nahuel.club/android-chrome-512x512.png">
+
+  <!-- ── Twitter ── -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Nahuel | Sculpture-Photography-Painting. VINYL DJ-sets">
+  <meta name="twitter:description" content="Official site of Nahuel — DJ, promoter, selector and art director. Bookings, ART WORKS and music.">
+  <meta name="twitter:image"       content="https://nahuel.club/android-chrome-512x512.png">
+
+  <!-- ── Favicons & PWA ── -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon"       href="/apple-touch-icon.png">
+  <link rel="manifest"               href="/site.webmanifest">
+  <meta name="theme-color"           content="#000000">
+  <meta name="msapplication-TileColor" content="#000000">
+  <meta name="msapplication-TileImage" content="/android-chrome-192x192.png">
+
+  <!-- ── Rich Structured Data ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "name": "Nahuel Mendez Isla",
+        "alternateName": "Nahuel",
+        "jobTitle": ["DJ", "Promoter", "Selector", "Art Director"],
+        "url": "https://nahuel.club",
+        "image": "https://nahuel.club/android-chrome-512x512.png",
+        "sameAs": [
+          "https://www.instagram.com/nahuelthings/",
+          "https://soundcloud.com/nahuel-mendez-isla",
+          "https://www.youtube.com/@nahuelmendezDJ",
+          "https://www.residentadvisor.net/dj/nahuel"
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    const _cw = console.warn;
+    console.warn = (...a) => { if (typeof a[0] !== 'string' || !a[0].includes('cdn.tailwindcss.com')) _cw(...a); };
+  </script>
+
+  <style>
+    /* ── Fonts ── */
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /*
+      Hero title — Bebas Neue, fluid & safe on every screen:
+        320px phone  → 16vw = 51px  ✓ fits "NAHUEL" with room
+        375px phone  → 16vw = 60px  ✓ bold, no overflow
+        768px tablet → 16vw = 123px ✓ commanding
+        1440px desk  → capped at 13rem (208px) ✓ dominant not absurd
+    */
+    .hero-title {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(3.5rem, 16vw, 13rem);
+      line-height: 0.95;
+      letter-spacing: 0.05em;
+      /* Prevent any overflow safety net */
+      max-width: 100%;
+      word-break: keep-all;
+    }
+
+    /* Section headings */
+    .section-header {
+      font-size: clamp(1.8rem, 6vw, 2.75rem);
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    /* Glitch on hover for section titles */
+    .glitch-text { position: relative; transition: transform 0.1s ease; }
+    .glitch-text:hover { animation: glitch-vibrate 0.4s infinite linear; }
+    @keyframes glitch-vibrate {
+      0%   { transform: translate(0); }
+      10%  { transform: translate(-1px,  1px); }
+      20%  { transform: translate(-2px, -1px); }
+      30%  { transform: translate( 1px,  2px); }
+      40%  { transform: translate( 2px, -2px); }
+      50%  { transform: translate(-1px,  1px); }
+      60%  { transform: translate(0); }
+      70%  { transform: translate( 1px, -1px); }
+      80%  { transform: translate(-2px,  2px); }
+      90%  { transform: translate( 2px,  1px); }
+      100% { transform: translate(0); }
+    }
+
+    /* Toast */
+    #form-toast {
+      position: fixed; bottom: 2rem; left: 50%;
+      transform: translateX(-50%) translateY(4rem);
+      background: white; color: black;
+      padding: 0.85rem 1.5rem; border-radius: 9999px;
+      font-size: 0.8rem; letter-spacing: 0.1em;
+      white-space: nowrap; opacity: 0;
+      transition: all 0.4s ease;
+      pointer-events: none; z-index: 300;
+    }
+    #form-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* Nav: full icons on ≥640px, condensed on mobile */
+    @media (max-width: 639px) {
+      .nav-socials-full   { display: none; }
+      .nav-socials-mobile { display: flex; }
+    }
+    @media (min-width: 640px) {
+      .nav-socials-full   { display: flex; }
+      .nav-socials-mobile { display: none; }
+    }
+
+    /* Iframes never overflow */
+    iframe { max-width: 100%; }
+
+    /* 44px min touch targets */
+    .nav-link, nav a { min-height: 44px; display: inline-flex; align-items: center; }
+
+    /* Scrollable modals on small screens */
+    .modal-inner {
+      max-height: 90vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  </style>
+</head>
+<body class="bg-black text-white">
+
+  <!-- ── Loading Screen ── -->
+  <div id="loading-screen" class="fixed inset-0 bg-black z-[200] flex items-center justify-center">
+    <div class="text-center">
+      <div class="w-8 h-8 mx-auto mb-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+      <div class="text-sm tracking-[3px] text-white/60">DISCOVERING THE ANALOG RITUAL PATH</div>
+    </div>
+  </div>
+
+  <!-- ── Toast ── -->
+  <div id="form-toast">INQUIRY SENT — SPEAK SOON 🙏</div>
+
+  <!-- ── Background ── -->
+  <canvas id="tessellation-canvas" class="fixed inset-0 z-[-2]"></canvas>
+  <div class="fixed inset-0 z-[-1] bg-gradient-to-b from-black/60 via-black/50 to-[#6B2D8B]"></div>
+
+  <!-- ══════════════════════════════ NAV ══════════════════════════════ -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-lg border-b border-white/10">
+    <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+
+      <div class="flex items-center gap-x-6 sm:gap-x-12 min-w-0">
+        <div class="flex items-center gap-x-2 sm:gap-x-3 shrink-0">
+          <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border border-white/40 flex items-center justify-center">
+            <span class="https://github.com/Dedalo101/Nahuel.club/blob/main/Nahuel%20mask%20to%20favicon..jpg"span>
+          </div>
+          <span class="font-semibold text-lg sm:text-2xl tracking-tight">NAHUEL</span>
+        </div>
+        <div class="hidden md:flex items-center gap-x-9 text-sm tracking-[1px]">
+          <a href="#music"   class="nav-link text-white/70 hover:text-white transition">MUSIC</a>
+          <a href="#booking" class="nav-link text-white/70 hover:text-white transition">BOOKING</a>
+        </div>
+      </div>
+
+      <!-- Desktop socials -->
+      <div class="nav-socials-full items-center gap-x-4 text-base shrink-0">
+        <a href="https://www.residentadvisor.net/dj/nahuel" target="_blank" title="Resident Advisor"
+           class="text-white/70 hover:text-white transition text-xs font-bold tracking-widest">RA</a>
+        <a href="https://open.spotify.com/artist/nahuel-mendez-isla" target="_blank" title="Spotify"
+           class="text-white/70 hover:text-white transition"><i class="fa-brands fa-spotify"></i></a>
+        <a href="https://soundcloud.com/nahuel-mendez-isla" target="_blank" title="SoundCloud"
+           class="text-white/70 hover:text-white transition"><i class="fa-brands fa-soundcloud"></i></a>
+        <a href="https://bandcamp.com/nahuel-mendez-isla" target="_blank" title="Bandcamp"
+           class="text-white/70 hover:text-white transition"><i class="fa-brands fa-bandcamp"></i></a>
+        <a href="https://music.apple.com/artist/nahuel-mendez-isla" target="_blank" title="Apple Music"
+           class="text-white/70 hover:text-white transition"><i class="fa-brands fa-apple"></i></a>
+        <span class="text-white/30">|</span>
+        <a href="https://www.youtube.com/@nahuelmendezDJ" target="_blank" title="YouTube"
+           class="text-white/70 hover:text-white transition"><i class="fa-brands fa-youtube"></i></a>
+        <a href="https://www.instagram.com/nahuelthings/" target="_blank" title="Instagram"
+           class="text-white/70 hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://linktr.ee/nahuelthings" target="_blank" title="All links"
+           class="text-white/70 hover:text-white transition"><i class="fa-solid fa-link"></i></a>
+      </div>
+
+      <!-- Mobile socials (condensed to 3) -->
+      <div class="nav-socials-mobile items-center gap-x-5 text-lg shrink-0">
+        <a href="https://www.instagram.com/nahuelthings/" target="_blank" title="Instagram"
+           class="text-white/70 hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://soundcloud.com/nahuel-mendez-isla" target="_blank" title="SoundCloud"
+           class="text-white/70 hover:text-white transition"><i class="fa-brands fa-soundcloud"></i></a>
+        <a href="https://linktr.ee/nahuelthings" target="_blank" title="All links"
+           class="text-white/70 hover:text-white transition"><i class="fa-solid fa-link"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════ HERO ══════════════════════════════ -->
+  <header class="relative h-screen flex items-center justify-center overflow-hidden px-4">
+    <div class="relative z-20 text-center w-full max-w-5xl mx-auto">
+      <div class="mb-4 sm:mb-6">
+        <span class="inline-block px-3 sm:px-4 py-1 text-[10px] sm:text-xs tracking-[2px] sm:tracking-[3px] border border-white/30 rounded-full">
+          Sculpture-Photography-Painting. VINYL DJ-sets
+        </span>
+      </div>
+
+      <!-- Hero name: Bebas Neue, fluid clamp, never overflows -->
+      <h1 class="hero-title text-white mb-4">NAHUEL</h1>
+
+      <div class="mt-6 sm:mt-10 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+        <a href="#music"
+           class="px-8 sm:px-10 py-3 sm:py-4 border border-white/40 hover:bg-white hover:text-black transition text-xs sm:text-sm tracking-[2px]">
+          LISTEN
+        </a>
+        <a href="#booking"
+           class="px-8 sm:px-10 py-3 sm:py-4 bg-white text-black text-xs sm:text-sm tracking-[2px] hover:bg-white/90 transition">
+          BOOK
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════ ART TEASER ══════════════════════════════ -->
+  <section class="max-w-screen-2xl mx-auto px-4 sm:px-8 py-14 sm:py-20 border-b border-white/10 text-center">
+    <div class="max-w-md mx-auto">
+      <h2 class="text-2xl sm:text-4xl tracking-tighter mb-6 sm:mb-8 glitch-text">ART WORKS</h2>
+      <a href="art.html"
+         class="inline-block px-8 sm:px-12 py-3 sm:py-4 border border-white/40 hover:bg-white hover:text-black transition text-xs sm:text-sm tracking-[2px]">
+        ENTER THE ART ARCHIVE
+      </a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════ MUSIC + BOOKINGS ══════════════════════════════ -->
+  <section id="music" class="max-w-screen-2xl mx-auto px-4 sm:px-8 py-14 sm:py-20 border-b border-white/10">
+    <div class="max-w-2xl mx-auto text-center">
+
+      <!-- MUSIC -->
+      <div class="mb-12 sm:mb-16">
+        <h2 class="section-header tracking-tighter mb-6 sm:mb-8 glitch-text">Music</h2>
+
+        <!-- YouTube — responsive 16:9 wrapper -->
+        <div class="mx-auto w-full max-w-[820px] mb-8">
+          <div class="bg-zinc-950 border border-white/10 rounded-3xl p-3 overflow-hidden shadow-2xl">
+            <div class="flex items-center justify-between mb-3 px-1">
+              <div class="text-xs tracking-[2px] text-white/50">LATEST FROM YOUTUBE</div>
+              <a href="https://www.youtube.com/@nahuelmendezDJ/videos" target="_blank"
+                 class="text-xs text-white/70 hover:text-white transition flex items-center gap-1">
+                VIEW ALL <i class="fa-brands fa-youtube ml-1"></i>
+              </a>
+            </div>
+            <!-- 16:9 aspect ratio wrapper — works on all screen sizes -->
+            <div class="relative w-full" style="padding-bottom:56.25%;">
+              <iframe
+                class="absolute inset-0 w-full h-full rounded-2xl"
+                src="https://www.youtube.com/embed?listType=playlist&list=UUJMdRqIF7A7jC3OP2ElKTkw&autoplay=1&mute=1"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+                loading="lazy">
+              </iframe>
+            </div>
+            <div class="text-[10px] text-white/40 mt-2 text-center">Autoplays muted — click to unmute</div>
+          </div>
+        </div>
+
+        <!-- SoundCloud -->
+        <div class="mx-auto w-full max-w-[520px]">
+          <div class="bg-zinc-950 border border-white/10 rounded-2xl p-1 overflow-hidden">
+            <iframe width="100%" height="260" scrolling="no" frameborder="no" loading="lazy"
+              src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/nahuel-mendez-isla&color=%23ffffff&auto_play=false&show_artwork=true&show_user=true">
+            </iframe>
+          </div>
+        </div>
+        <div class="mt-3 text-xs text-white/50">New sets appear automatically when uploaded to SoundCloud</div>
+      </div>
+
+      <!-- Platform links -->
+      <div class="mb-12 sm:mb-16 flex flex-wrap gap-x-6 sm:gap-x-8 gap-y-4 text-xl justify-center text-white/60">
+        <a href="https://www.residentadvisor.net/dj/nahuel" target="_blank"
+           class="hover:text-white transition text-xs font-bold tracking-widest flex items-center">RA</a>
+        <a href="https://open.spotify.com/artist/nahuel-mendez-isla" target="_blank"
+           class="hover:text-white transition"><i class="fa-brands fa-spotify"></i></a>
+        <a href="https://soundcloud.com/nahuel-mendez-isla" target="_blank"
+           class="hover:text-white transition"><i class="fa-brands fa-soundcloud"></i></a>
+        <a href="https://bandcamp.com/nahuel-mendez-isla" target="_blank"
+           class="hover:text-white transition"><i class="fa-brands fa-bandcamp"></i></a>
+        <a href="https://music.apple.com/artist/nahuel-mendez-isla" target="_blank"
+           class="hover:text-white transition"><i class="fa-brands fa-apple"></i></a>
+        <a href="https://www.youtube.com/@nahuelmendezDJ" target="_blank"
+           class="hover:text-white transition"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+
+      <!-- BOOKINGS -->
+      <div id="booking">
+        <h2 class="section-header tracking-tighter mb-6 sm:mb-8 glitch-text">Bookings</h2>
+
+        <div class="max-w-md mx-auto w-full">
+          <div class="bg-zinc-950 border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-10">
+            <div class="space-y-5 sm:space-y-6">
+              <div>
+                <label class="block text-xs tracking-[2px] text-white/50 mb-2">YOUR NAME</label>
+                <input id="f-name" type="text" autocomplete="name"
+                  class="w-full bg-transparent border-b border-white/20 py-3 text-base sm:text-lg focus:outline-none placeholder:text-white/30"
+                  placeholder="Alex Rivera">
+              </div>
+              <div>
+                <label class="block text-xs tracking-[2px] text-white/50 mb-2">EMAIL</label>
+                <input id="f-email" type="email" autocomplete="email"
+                  class="w-full bg-transparent border-b border-white/20 py-3 text-base sm:text-lg focus:outline-none placeholder:text-white/30"
+                  placeholder="you@studio.com">
+              </div>
+              <div>
+                <label class="block text-xs tracking-[2px] text-white/50 mb-2">EVENT / PROJECT</label>
+                <textarea id="f-message"
+                  class="w-full bg-transparent border-b border-white/20 py-3 text-base sm:text-lg focus:outline-none placeholder:text-white/30 resize-y min-h-[80px]"
+                  placeholder="Describe your event or commission"></textarea>
+              </div>
+              <p id="form-error" class="text-red-400 text-xs hidden">Please fill in all fields before sending.</p>
+              <button type="button" onclick="submitBooking()"
+                class="w-full mt-4 py-4 bg-white text-black font-medium tracking-[1.5px] text-sm hover:bg-white/90 transition">
+                SEND INQUIRY
+              </button>
+              <div class="text-center text-xs text-white/40 pt-2">I usually reply within 48 hours.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
+  <footer class="border-t border-white/10 py-12 sm:py-16">
+    <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 text-center text-sm text-white/50">
+      <div>© NAHUEL 2026 — Maintained with ❤️ for underground culture</div>
+      <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <button onclick="showGlueRecordsModal()"
+          class="text-white/60 hover:text-white text-sm tracking-widest transition">
+          GlueRecords.com
+        </button>
+        <span class="hidden sm:inline text-white/20">·</span>
+        <button onclick="showSurveyModal()"
+          class="text-white/40 hover:text-white/70 text-xs tracking-widest transition">
+          Leave feedback
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════ MODALS ══════════════════════════════ -->
+
+  <div id="gluerecords-modal" onclick="hideGlueRecordsModal()"
+       class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 sm:p-6">
+    <div onclick="event.stopImmediatePropagation()"
+         class="modal-inner bg-zinc-950 border border-white/20 rounded-2xl sm:rounded-3xl p-6 sm:p-10 max-w-md w-full text-center">
+      <h3 class="text-xl sm:text-2xl tracking-tight mb-6">GlueRecords</h3>
+      <div class="space-y-4 text-left text-sm">
+        <a href="https://buymeacoffee.com/Dedalo101" target="_blank"
+           class="block px-5 sm:px-6 py-3 border border-white/20 hover:bg-white hover:text-black rounded-2xl transition">
+          <strong>Support GlueRecords</strong><br>
+          <span class="text-xs text-white/50">GitHub Sponsors &amp; Funding</span>
+        </a>
+        <a href="https://buymeacoffee.com/Dedalo101" target="_blank"
+           class="block px-5 sm:px-6 py-3 border border-white/20 hover:bg-white hover:text-black rounded-2xl transition">
+          <strong>Buy Us Coffe</strong>
+        </a>
+      </div>
+      <div class="mt-6 text-xs text-white/60 border-t border-white/10 pt-4">
+        For inquiries about services, viability, and estimates:<br>
+        <a href="mailto:info@gluerecords.club" class="text-white hover:underline">info@gluerecords.club</a>
+      </div>
+      <div class="mt-4 text-xs text-white/50">Tap outside to close</div>
+    </div>
+  </div>
+
+  <div id="survey-modal" onclick="hideSurveyModal()"
+       class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-4 sm:p-6">
+    <div onclick="event.stopImmediatePropagation()"
+         class="modal-inner bg-zinc-950 border border-white/20 rounded-2xl sm:rounded-3xl p-6 sm:p-10 max-w-lg w-full">
+      <h3 class="text-xl sm:text-2xl tracking-tight mb-6 sm:mb-8 text-center">Quick Feedback Survey</h3>
+      <div class="space-y-6 sm:space-y-8">
+        <div>
+          <label class="block text-sm text-white/70 mb-3">1. How would you rate the overall quality?</label>
+          <select id="s-rating"
+            class="w-full bg-black border border-white/30 rounded-2xl px-4 sm:px-5 py-3 text-white focus:outline-none text-sm">
+            <option>Excellent</option><option>Very Good</option><option>Good</option><option>Fair</option><option>Poor</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm text-white/70 mb-3">2. What improvements would you suggest?</label>
+          <textarea id="s-optimize"
+            class="w-full bg-black border border-white/30 rounded-2xl px-4 sm:px-5 py-3 text-white h-20 sm:h-24 focus:outline-none text-sm"
+            placeholder="Your suggestions..."></textarea>
+        </div>
+        <div>
+          <label class="block text-sm text-white/70 mb-3">3. Any new features you'd like to see?</label>
+          <textarea id="s-features"
+            class="w-full bg-black border border-white/30 rounded-2xl px-4 sm:px-5 py-3 text-white h-20 sm:h-24 focus:outline-none text-sm"
+            placeholder="Ideas for the future..."></textarea>
+        </div>
+        <button type="button" onclick="submitSurvey()"
+          class="w-full py-4 bg-white text-black font-medium tracking-[1.5px] rounded-2xl hover:bg-white/90 transition text-sm">
+          SUBMIT FEEDBACK
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ SCRIPTS ══════════════════════════════ -->
+  <script>
+    /* ── BOOKING FORM ── */
+    function submitBooking() {
+      const name    = document.getElementById('f-name').value.trim();
+      const email   = document.getElementById('f-email').value.trim();
+      const message = document.getElementById('f-message').value.trim();
+      const error   = document.getElementById('form-error');
+      if (!name || !email || !message) { error.classList.remove('hidden'); return; }
+      error.classList.add('hidden');
+     
+      fetch('https://formspree.io/f/xvzylezv', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, message })
+      });
+      document.getElementById('f-name').value    = '';
+      document.getElementById('f-email').value   = '';
+      document.getElementById('f-message').value = '';
+      const toast = document.getElementById('form-toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    /* ── CANVAS TESSELLATION ──
+       Wave ripple preserved. Mobile: smaller hexes + thinner lines.
+       CPU: fully stopped via visibilitychange when tab is hidden. */
+    function initTessellation() {
+      const canvas = document.getElementById('tessellation-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let time = 0, phase = 0, rafId = null;
+
+      const isMobile = () => window.innerWidth < 640;
+      const getHexSize = () => isMobile() ? 26 : 42;
+
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      window.addEventListener('orientationchange', () => setTimeout(resize, 150));
+      resize();
+
+      function drawHexagon(x, y, size, rotation, opacity, phaseShift) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotation + phaseShift);
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const a = (Math.PI / 3) * i;
+          i === 0 ? ctx.moveTo(Math.cos(a) * size, Math.sin(a) * size)
+                  : ctx.lineTo(Math.cos(a) * size, Math.sin(a) * size);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = `rgba(255,255,255,${opacity})`;
+        ctx.lineWidth   = isMobile() ? 1.5 : 2.5;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.42, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function animate() {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const hexSize = getHexSize();
+        const spacing = hexSize * 1.85;
+        const rows    = Math.ceil(canvas.height / spacing) + 3;
+        const cols    = Math.ceil(canvas.width  / spacing) + 3;
+
+        time  += 0.012;
+        phase  = (phase + 0.0008) % (Math.PI * 2);
+
+        for (let row = -2; row < rows; row++) {
+          for (let col = -2; col < cols; col++) {
+            const offsetX = (row % 2) * (spacing * 0.5);
+            const x    = col * spacing + offsetX;
+            const y    = row * spacing * 0.866;
+            const wave = col * 0.4 + row * 0.7;           // spatial wave offset
+            const pulse = 0.75 + Math.sin(time * 2.2 + wave) * 0.35;
+            const rot   = Math.sin(time * 0.9 + wave * 0.5) * 0.12 + phase * 0.3;
+            const op    = 0.45 + Math.sin(time * 1.8 + wave) * 0.35;
+            drawHexagon(x, y, hexSize * pulse, rot, op, phase * 0.5);
+          }
+        }
+        rafId = requestAnimationFrame(animate);
+      }
+
+      function start() { if (!rafId) rafId = requestAnimationFrame(animate); }
+      function stop()  { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } }
+
+      document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+      start();
+    }
+
+    /* ── MODALS ── */
+    function showGlueRecordsModal() { document.getElementById('gluerecords-modal').classList.replace('hidden','flex'); }
+    function hideGlueRecordsModal() { document.getElementById('gluerecords-modal').classList.replace('flex','hidden'); }
+    function showSurveyModal()      { document.getElementById('survey-modal').classList.replace('hidden','flex'); }
+    function hideSurveyModal()      { document.getElementById('survey-modal').classList.replace('flex','hidden'); }
+    function submitSurvey() {
+      const inner = document.querySelector('#survey-modal > div');
+      inner.innerHTML = `
+        <div class="text-center py-8">
+          <div class="text-4xl mb-4">🙏</div>
+          <h3 class="text-2xl tracking-tight mb-4">Thank You!</h3>
+          <p class="text-white/70 mb-8">Your feedback has been received.</p>
+          <button onclick="hideSurveyModal()"
+            class="px-8 py-3 border border-white/30 hover:bg-white hover:text-black transition rounded-2xl text-sm tracking-widest">
+            CLOSE
+          </button>
+        </div>`;
+      setTimeout(() => hideSurveyModal(), 2200);
+    }
+
+    /* ── INIT ── */
+    window.onload = function () {
+      initTessellation();
+      const loader = document.getElementById('loading-screen');
+      if (loader) {
+        setTimeout(() => {
+          loader.style.transition = 'opacity 0.6s ease';
+          loader.style.opacity    = '0';
+          setTimeout(() => loader.remove(), 700);
+        }, 400);
+      }
+    };
+
+    console.log('%c[NAHUEL] Ready.', 'color:#888');
+  </script>
+</body>
+</html>
