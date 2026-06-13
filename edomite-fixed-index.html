@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Edomite · Techno · Desert Bass · Glue Records</title>
+<meta name="description" content="Edomite — underground techno DJ and producer. Resident artist of Glue Records, Málaga. Stream Orion on site, mixes, bookings, DJ sets.">
+<meta name="keywords" content="Edomite, edomite.club, Orion, techno, underground, Glue Records, Málaga, DJ, electronic music, desert techno, DJ sets, bookings">
+<meta name="author" content="Edomite">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://edomite.club/">
+
+<meta name="theme-color" content="#060302">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Edomite">
+<meta property="og:title" content="Edomite · Techno · Glue Records">
+<meta property="og:description" content="Underground techno DJ and producer. Glue Records artist. Stream Orion — mixes, bookings, DJ sets.">
+<meta property="og:url" content="https://edomite.club/">
+<meta property="og:image" content="https://edomite.club/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Edomite — Underground Techno · Glue Records">
+<meta property="og:locale" content="en_GB">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Edomite · Techno · Glue Records">
+<meta name="twitter:description" content="Underground techno DJ and producer. Glue Records artist. Play Orion on arrival.">
+<meta name="twitter:image" content="https://edomite.club/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MusicGroup",
+  "name": "Edomite",
+  "description": "Underground techno DJ and producer. Glue Records resident artist based in Málaga, Spain.",
+  "url": "https://edomite.club",
+  "image": "https://edomite.club/og-image.png",
+  "genre": ["Techno", "Underground", "Electronic", "Desert Techno"],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Málaga",
+    "addressCountry": "ES"
+  },
+  "memberOf": {
+    "@type": "MusicGroup",
+    "name": "Glue Records",
+    "url": "https://gluerecords.club"
+  },
+  "sameAs": [
+    "https://www.mixcloud.com/Edomite/",
+    "https://gluerecords.club"
+  ],
+  "track": {
+    "@type": "MusicRecording",
+    "name": "Orion",
+    "byArtist": {
+      "@type": "MusicGroup",
+      "name": "Edomite"
+    },
+    "inAlbum": {
+      "@type": "MusicAlbum",
+      "name": "Edomite"
+    }
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<!-- Favicon: simple SVG star/particle in site colors (dark + rust), works in all browsers/modals/tabs -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23060302'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23b84a1e'/%3E%3Cpath d='M16 8 L17 15 L24 16 L17 17 L16 24 L15 17 L8 16 L15 15 Z' fill='%23b84a1e'/%3E%3C/svg%3E">
+
+<style>
+:root {
+  --rust:   #b84a1e;
+  --sand:   #c9a96e;
+  --ember:  #e05a1f;
+  --bg:     #060302;
+  --dim:    rgba(200,120,40,.18);
+  --glitch-dur: 9s;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+a, button, nav a, .orion-player, .orion-player * { cursor: none !important; }
+
+html, body {
+  width:100%; height:100%;
+  background: var(--bg);
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  font-family: 'Share Tech Mono', monospace;
+  cursor: none;
+}
+
+#bg-canvas {
+  position: fixed; inset: 0;
+  width:100%; height:100%;
+  z-index: 0;
+  touch-action: none;
+}
+
+#scanlines {
+  position: fixed; inset: 0; z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent, transparent 2px,
+    rgba(0,0,0,.13) 2px, rgba(0,0,0,.13) 3px
+  );
+}
+
+.stage {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0;
+  pointer-events: none;
+}
+
+.label-link {
+  position: fixed; top: 22px; left: clamp(18px,3vw,38px);
+  z-index: 20;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(7px,.9vw,9px);
+  letter-spacing: .45em;
+  color: rgba(200,100,30,.35);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color .25s;
+  pointer-events: all;
+}
+.label-link:hover { color: var(--sand); }
+
+.eyebrow {
+  font-size: clamp(7px,.95vw,10px);
+  letter-spacing: .6em;
+  color: rgba(200,100,30,.3);
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.title {
+  font-family: 'Special Elite', serif;
+  font-size: clamp(64px, 14vw, 196px);
+  line-height: .9;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  text-shadow:
+    -3px 0 0 rgba(180,50,10,.4),
+     3px 0 0 rgba(200,120,40,.2),
+     0 0 120px rgba(180,60,10,.12);
+  animation: titleGlitch var(--glitch-dur) infinite;
+  text-align: center;
+}
+
+@keyframes titleGlitch {
+  0%,92%,100% { clip-path:none; transform:none; }
+  93%  { clip-path:inset(20% 0 55% 0); transform:translate(-5px,0); }
+  94%  { clip-path:inset(65% 0  8% 0); transform:translate( 5px,0); }
+  95%  { clip-path:none; transform:none; }
+  97%  { clip-path:inset( 8% 0 75% 0); transform:translate(-2px,0); }
+  97.5%{ clip-path:none; transform:none; }
+}
+
+.rule {
+  width: clamp(40px,10vw,130px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--rust), transparent);
+  margin: 20px auto;
+  opacity: .4;
+}
+
+.tagline {
+  font-size: clamp(7px,.9vw,9px);
+  letter-spacing: .5em;
+  color: rgba(255,255,255,.18);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  z-index: 20;
+  display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(18px,4vw,56px);
+  padding: clamp(14px,2.5vh,24px) clamp(16px,3vw,40px);
+  background: linear-gradient(0deg, rgba(6,3,2,.98) 60%, transparent);
+  pointer-events: all;
+}
+
+nav a {
+  font-family: 'Special Elite', serif;
+  font-size: clamp(11px,1.6vw,15px);
+  letter-spacing: .08em;
+  color: rgba(255,255,255,.3);
+  text-decoration: none;
+  text-transform: lowercase;
+  transition: color .25s, text-shadow .25s;
+}
+nav a:hover {
+  color: #fff;
+  text-shadow: 0 0 18px var(--ember);
+}
+
+.coord {
+  position: fixed;
+  font-size: 7px; letter-spacing: .3em;
+  color: rgba(200,100,30,.18);
+  text-transform: uppercase;
+  pointer-events: none; z-index: 15;
+}
+.coord-tl { top:14px; left:clamp(18px,3vw,38px); padding-left: 90px; }
+.coord-tr { top:14px; right:clamp(18px,3vw,38px); text-align:right; }
+.coord-bl { bottom:70px; left:clamp(18px,3vw,38px); }
+
+@media (max-width:600px) {
+  .title { font-size: clamp(52px,17vw,100px); }
+  nav { gap: clamp(14px,5vw,32px); padding-bottom: 20px; }
+  nav a { font-size: clamp(10px,3.5vw,14px); }
+}
+@media (min-width:1600px) {
+  .title { font-size: clamp(160px,12vw,220px); }
+}
+
+/* Orion track player — fits the desert/mono aesthetic, minimal, centered under tagline */
+.orion-player {
+  margin-top: 26px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: clamp(8px, 0.92vw, 10px);
+  letter-spacing: 0.22em;
+  color: rgba(200,100,30, .52);
+  pointer-events: all;
+  user-select: none;
+  transition: color .2s ease;
+}
+.orion-player.playing {
+  color: var(--sand);
+}
+.orion-player.playing .track {
+  text-shadow: 0 0 8px rgba(201,169,110,.35);
+}
+.orion-player button {
+  background: none;
+  border: 1px solid rgba(200,100,30,.38);
+  color: inherit;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  width: 20px;
+  height: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color .2s, color .2s, background .2s;
+  padding: 0;
+  border-radius: 1px;
+}
+.orion-player button:hover {
+  border-color: var(--rust);
+  color: #fff;
+  background: rgba(184,74,30,.08);
+}
+.orion-player .track {
+  font-family: 'Special Elite', serif;
+  letter-spacing: 0.12em;
+  font-size: clamp(9px,1.05vw,11px);
+  position: relative;
+}
+.orion-player .time {
+  font-size: 7.5px;
+  opacity: .55;
+  min-width: 58px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.orion-player .fallback {
+  opacity: .35;
+  text-decoration: none;
+  font-size: 8px;
+  line-height: 1;
+  padding: 1px 2px;
+  transition: opacity .2s, color .2s;
+}
+.orion-player .fallback:hover {
+  opacity: .9;
+  color: var(--rust);
+}
+
+/* muted state for true "automatic" start: audio plays silently until first interaction */
+.orion-player.muted {
+  opacity: 0.65;
+}
+.orion-player.muted.playing .track {
+  text-shadow: none;
+}
+.orion-player.muted .time {
+  opacity: 0.4;
+}
+
+/* Bookings modal — dark, minimal, fits the existing aesthetic */
+#bookings-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 3, 2, 0.94);
+  padding: 20px;
+  cursor: default;
+}
+#bookings-modal .modal-content {
+  width: 100%;
+  max-width: 920px;
+  background: var(--bg);
+  border: 1px solid rgba(200, 100, 30, 0.25);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+  overflow: hidden;
+  font-family: 'Share Tech Mono', monospace;
+}
+#bookings-modal .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(200, 100, 30, 0.15);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(200, 100, 30, 0.6);
+}
+#bookings-modal .modal-header button {
+  background: none;
+  border: 1px solid rgba(200, 100, 30, 0.3);
+  color: inherit;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  padding: 1px 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+#bookings-modal .modal-header button:hover {
+  border-color: var(--rust);
+  color: #fff;
+  background: rgba(184, 74, 30, 0.1);
+}
+#bookings-modal iframe {
+  display: block;
+  width: 100%;
+  height: 650px;
+  max-height: 72vh;
+  border: none;
+  background: #060302;
+}
+
+@media (max-width:600px) {
+  .orion-player { margin-top: 16px; gap: 6px; }
+  .orion-player button { width: 17px; height: 17px; font-size: 7px; }
+  .orion-player .time { min-width: 52px; font-size: 7px; }
+}
+
+/* Mobile: lock the view so touch+drag does not shift/scroll the site or trigger rubberband.
+   touch-action:none on root + canvas prevents pan; manipulation on tappable UI for responsive taps.
+   overscroll none kills bounce. */
+nav, .label-link, .orion-player, .orion-player *, button, a[href] {
+  touch-action: manipulation;
+}
+#bookings-modal, #bookings-modal .modal-content, #bookings-modal iframe {
+  touch-action: auto;
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div id="scanlines"></div>
+
+<a class="label-link" href="https://gluerecords.club" target="_blank" rel="noopener">Glue Records ↗</a>
+
+<span class="coord coord-tl">36.7213° N · 4.4214° W</span>
+<span class="coord coord-tr">Est. 2024</span>
+<span class="coord coord-bl">Edomite.club</span>
+
+<div class="stage">
+  <p class="eyebrow">Underground · Techno · Málaga</p>
+  <h1 class="title">Edomite</h1>
+  <div class="rule"></div>
+  <p class="tagline">Red Land · Dust · Bass</p>
+  <div class="orion-player" id="orion-player" title="Orion — starts automatically (muted). Click anywhere or the player for sound. ▶/⏸ toggles. ↗ opens file.">
+    <button id="play-btn" aria-label="Play Orion">▶</button>
+    <span class="track">ORION</span>
+    <span class="time" id="time">—</span>
+    <a class="fallback" href="Orion%20-%20edomite.mp3" target="_blank" rel="noopener" title="Direct link to Orion file (fallback / download / browser player)">↗</a>
+  </div>
+</div>
+
+<nav>
+  <a href="https://www.mixcloud.com/Edomite/" target="_blank" rel="noopener">mixes</a>
+  <a id="bookings-link" href="https://ra.co/promoters/188173" target="_blank" rel="noopener">bookings</a>
+  <a href="https://www.mixcloud.com/Edomite/" target="_blank" rel="noopener">dj sets</a>
+  <a href="https://gluerecords.club" target="_blank" rel="noopener">label</a>
+</nav>
+
+<section aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">
+  <h1>Edomite — Underground Techno DJ · Glue Records · Málaga</h1>
+  <p>Edomite is an underground techno DJ and producer, resident artist of Glue Records in Málaga, Spain. Specialising in hypnotic, dark techno with roots in desert bass and raw electronic sound. Stream the track Orion directly on this site. Bookings & events via RA. Mixes and DJ sets on Mixcloud: mixcloud.com/Edomite/</p>
+  <p>Edomite · techno · underground · Glue Records · Málaga · España · DJ sets · bookings · electronic music · edomite.club</p>
+</section>
+
+<script>
+const PTR = { x: window.innerWidth/2, y: window.innerHeight/2, nx:0, ny:0 };
+window.addEventListener('mousemove', e => {
+  PTR.x=e.clientX; PTR.y=e.clientY;
+  PTR.nx=e.clientX/window.innerWidth*2-1;
+  PTR.ny=e.clientY/window.innerHeight*2-1;
+},{passive:true});
+window.addEventListener('touchmove', e=>{
+  const t=e.touches[0];
+  PTR.x=t.clientX; PTR.y=t.clientY;
+  PTR.nx=t.clientX/window.innerWidth*2-1;
+  PTR.ny=t.clientY/window.innerHeight*2-1;
+},{passive:true});
+
+// Strongly prevent the page content from shifting on touch drag (mobile only).
+// CSS touch-action helps, this catches cases where browser still tries to pan/overscroll.
+if ('ontouchstart' in window) {
+  document.addEventListener('touchmove', e => {
+    // Do not interfere with scrolling inside the events modal (iframe)
+    if (e.target.closest && e.target.closest('#bookings-modal')) return;
+    e.preventDefault();
+  }, { passive: false });
+}
+
+(function(){
+  const cv  = document.getElementById('bg-canvas');
+  const ctx = cv.getContext('2d');
+  cv.style.cursor = 'none'; // will be reinforced in resize
+  let W, H, t = 0;
+  let targetX = 0, targetY = 0;
+  const sparks = [];
+  let shineIntensity = 0;
+  let titleRect = null;
+  let titleLetters = [];
+  let isOverTitle = false;
+  let mouseAttractEnd = 0;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio||1, 2);
+    W = Math.floor(window.innerWidth  * dpr);
+    H = Math.floor(window.innerHeight * dpr);
+    cv.width  = W; cv.height = H;
+    cv.style.width  = window.innerWidth  + 'px';
+    cv.style.height = window.innerHeight + 'px';
+    cv.style.cursor = 'none'; // custom tiny pointer drawn in JS
+    initParticles();
+    buildGrid();
+    updateTarget();
+    updateTitleEffect();
+  }
+
+  const N = 420;
+  const particles = [];
+
+  function initParticles() {
+    particles.length = 0;
+    for (let i=0; i<N; i++) particles.push(makeParticle(true));
+  }
+
+  function makeParticle(full) {
+    const x = Math.random()*W;
+    const y = full ? Math.random()*H : -4;
+    const size  = .6 + Math.random()*2.2;
+    const speed = .18 + Math.random()*.55;
+    const drift = (Math.random()-.5)*.35;
+    const hue   = 18 + Math.random()*22;
+    const sat   = 55 + Math.random()*30;
+    const lum   = 38 + Math.random()*32;
+    const alpha = .18 + Math.random()*.45;
+    const wave  = Math.random()*Math.PI*2;
+    const mode  = (Math.random() < 0.20) ? 'orion' : 'normal'; // ~20% of dots are drawn to the Orion play button
+    return {
+      x, y, size, speed, drift, hue, sat, lum, alpha, wave, vy: speed,
+      mode,
+      baseHue: hue, baseSat: sat, baseLum: lum,
+      glow: 0
+    };
+  }
+
+  const GS = 80;
+
+  function buildGrid() {}
+
+  function updateTarget() {
+    const el = document.getElementById('orion-player');
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    targetX = (rect.left + rect.width / 2) * dpr;
+    targetY = (rect.top + rect.height / 2) * dpr;
+  }
+
+  function updateTitleEffect() {
+    const titleEl = document.querySelector('.title');
+    if (!titleEl) return;
+
+    // undo letter scrambler: restore original text if it was split
+    if (titleLetters.length > 0) {
+      titleEl.textContent = 'Edomite';
+      titleLetters = [];
+    }
+
+    // update rect for detection
+    titleRect = titleEl.getBoundingClientRect();
+
+    const mxClient = PTR.x;
+    const myClient = PTR.y;
+    const over = mxClient >= titleRect.left && mxClient <= titleRect.right &&
+                 myClient >= titleRect.top && myClient <= titleRect.bottom;
+    isOverTitle = over;
+
+    if (over) {
+      // more prominent and frequent glitch when cursor around title
+      document.documentElement.style.setProperty('--glitch-dur', '0.25s');
+
+      // flash effect when cursor around (periodic bright flash)
+      const now = Date.now();
+      if (now - (window._lastTitleFlash || 0) > 400) {
+        window._lastTitleFlash = now;
+        const orig = titleEl.style.textShadow || '';
+        titleEl.style.textShadow = '0 0 40px #fff, 0 0 80px #aaddff, 0 0 120px #88ccff';
+        setTimeout(() => {
+          if (titleEl) titleEl.style.textShadow = orig;
+        }, 120);
+      }
+    } else {
+      document.documentElement.style.setProperty('--glitch-dur', '9s');
+      isOverTitle = false;
+    }
+  }
+
+  function spawnExplosion(cx, cy, count = 10) {
+    for (let k = 0; k < count; k++) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 1.0 + Math.random() * 3.0;
+      sparks.push({
+        x: cx + (Math.random() - 0.5) * 4,
+        y: cy + (Math.random() - 0.5) * 4,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed * 0.85 - 0.35,
+        life: 11 + Math.random() * 17,
+        size: 0.8 + Math.random() * 1.7,
+        hue: 2 + Math.random() * 10,
+        sat: 96,
+        lum: 62 + Math.random() * 14
+      });
+    }
+  }
+
+  // Tiny custom cursor pointer (drawn on canvas in JS)
+  // Similar to a sleek glowing pointer, tiny size, with shine on interaction
+  function triggerShine() {
+    shineIntensity = 1.0;
+    mouseAttractEnd = Date.now() + 3000; // 3s attraction to cursor like Orion (per request)
+  }
+  window.addEventListener('mousedown', triggerShine, {passive: true});
+  window.addEventListener('touchstart', triggerShine, {passive: true});
+
+  function drawTinyCursor(x, y, intensity) {
+    if (!x || !y) return;
+    const isBH = !!isOverTitle; // black hole mode over title
+    const pulse = Math.sin(t * 6) * 0.2 + 1;
+    const base = 4.5 * pulse * (isBH ? 1.5 : 1);  // bigger black hole when over title
+
+    // stronger outer glow (blue light) - darker accretion for BH
+    ctx.save();
+    ctx.shadowColor = isBH ? '#222244' : '#88aaff';
+    ctx.shadowBlur = 4 + intensity * 10 + (isBH ? 8 : 0);
+    ctx.beginPath();
+    ctx.arc(x, y, base * 3 + intensity * 3, 0, Math.PI * 2);
+    ctx.fillStyle = isBH 
+      ? `hsla(220, 60%, 20%, ${0.25 + intensity * 0.3})` 
+      : `hsla(205, 95%, 72%, ${0.12 + intensity * 0.25})`;
+    ctx.fill();
+    ctx.restore();
+
+    // main core dot (brighter) - dark for black hole
+    ctx.beginPath();
+    ctx.arc(x, y, base, 0, Math.PI * 2);
+    ctx.fillStyle = isBH 
+      ? (intensity > 0.1 ? '#112244' : '#000011')
+      : (intensity > 0.1 ? '#aaddff' : '#ffffff');
+    ctx.fill();
+
+    // ring - tighter for BH
+    ctx.beginPath();
+    ctx.arc(x, y, base * (isBH ? 1.4 : 1.9), 0, Math.PI * 2);
+    ctx.strokeStyle = isBH 
+      ? `hsla(220, 80%, 40%, ${0.6 + intensity * 0.3})` 
+      : `hsla(200, 85%, 82%, ${0.5 + intensity * 0.35})`;
+    ctx.lineWidth = isBH ? 1.2 : 0.9;
+    ctx.stroke();
+
+    // elongated spikes - way more elongated on shine/click
+    // vertical rays are 3x longer than horizontal
+    // more rays and stronger when black hole over title
+    ctx.strokeStyle = isBH 
+      ? `hsla(200, 70%, 60%, ${0.5 + intensity * 0.4})` 
+      : `hsla(200, 95%, 78%, ${0.7 + intensity * 0.3})`;
+    ctx.lineWidth = (isBH ? 1.3 : 1) + intensity * 1.2;
+    const rayLen = 6 + intensity * 28; // much more elongated blue light
+    const numRays = isBH ? 8 : 4;
+    for (let i = 0; i < numRays; i++) {
+      const ang = i * (Math.PI * 2 / numRays);
+      let thisRayLen = rayLen;
+      if (Math.abs(Math.cos(ang)) < 0.5) { // vertical (up/down)
+        thisRayLen = rayLen * 3;
+      }
+      ctx.beginPath();
+      ctx.moveTo(x + Math.cos(ang) * (base + 1), y + Math.sin(ang) * (base + 1));
+      ctx.lineTo(x + Math.cos(ang) * thisRayLen, y + Math.sin(ang) * thisRayLen);
+      ctx.stroke();
+    }
+
+    // extra faint long rays for more "spawn" light effect when shining
+    // even more when black hole
+    if (intensity > 0.1 || isBH) {
+      ctx.strokeStyle = isBH 
+        ? `hsla(205, 60%, 55%, ${0.15 + intensity * 0.25})` 
+        : `hsla(205, 90%, 70%, ${0.25 + intensity * 0.2})`;
+      ctx.lineWidth = isBH ? 0.8 : 0.5;
+      const extraCount = isBH ? 6 : 4;
+      for (let i = 0; i < extraCount; i++) {
+        const ang = i * (Math.PI * 2 / extraCount) + 0.3;
+        let thisExtraLen = rayLen * (isBH ? 1.6 : 1.3);
+        if (Math.abs(Math.cos(ang)) < 0.5) { // vertical 3x
+          thisExtraLen = thisExtraLen * 3;
+        }
+        ctx.beginPath();
+        ctx.moveTo(x + Math.cos(ang) * (base * 0.8), y + Math.sin(ang) * (base * 0.8));
+        ctx.lineTo(x + Math.cos(ang) * thisExtraLen, y + Math.sin(ang) * thisExtraLen);
+        ctx.stroke();
+      }
+    }
+  }
+
+  function warpPt(bx, by, tt) {
+    const dx = bx/W*2-1 - PTR.nx;
+    const dy = by/H*2-1 - PTR.ny;
+    const d2 = dx*dx+dy*dy;
+    const pull = Math.exp(-d2*3.5)*28;
+    return {
+      x: bx + PTR.nx*pull + Math.sin(tt*.4 + by*.006)*3,
+      y: by + PTR.ny*pull + Math.cos(tt*.3 + bx*.006)*2.4
+    };
+  }
+
+  function draw() {
+    requestAnimationFrame(draw);
+    t += .004;
+
+    ctx.fillStyle = '#060302';
+    ctx.fillRect(0,0,W,H);
+
+    const dpr = Math.min(window.devicePixelRatio||1,2);
+    updateTarget();
+    const mx = PTR.x * dpr, my = PTR.y * dpr;
+
+    if (shineIntensity > 0) {
+      shineIntensity = Math.max(0, shineIntensity * 0.84 - 0.01);
+    }
+
+    // during 3s post-click attraction, keep cursor shining
+    if (Date.now() < mouseAttractEnd) {
+      shineIntensity = Math.max(shineIntensity, 0.65);
+    }
+
+    // while the Orion track is actually playing (audible), pull more dots toward the button
+    const orionActiveEl = document.getElementById('orion-player');
+    const songActive = !!(orionActiveEl && orionActiveEl.classList.contains('playing') && !orionActiveEl.classList.contains('muted'));
+
+    updateTitleEffect();
+
+    ctx.save();
+    ctx.lineWidth = .5;
+    const cols = Math.ceil(W/GS)+2;
+    const rows = Math.ceil(H/GS)+2;
+    for (let r=0; r<rows; r++) {
+      ctx.beginPath();
+      for (let c=0; c<cols; c++) {
+        const bx = c*GS-GS, by = r*GS-GS;
+        const p  = warpPt(bx,by,t);
+        const dm = Math.hypot(p.x-mx, p.y-my);
+        const near = Math.max(0, 1-dm/320);
+        ctx.strokeStyle = `rgba(${140+near*80},${55+near*30},${10+near*10},${.04+near*.12})`;
+        if (c===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y);
+      }
+      ctx.stroke();
+    }
+    for (let c=0; c<cols; c++) {
+      ctx.beginPath();
+      for (let r=0; r<rows; r++) {
+        const bx = c*GS-GS, by = r*GS-GS;
+        const p  = warpPt(bx,by,t);
+        const dm = Math.hypot(p.x-mx, p.y-my);
+        const near = Math.max(0, 1-dm/320);
+        ctx.strokeStyle = `rgba(${140+near*80},${55+near*30},${10+near*10},${.03+near*.09})`;
+        if (r===0) ctx.moveTo(p.x,p.y); else ctx.lineTo(p.x,p.y);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    for (let i=0; i<particles.length; i++) {
+      const p = particles[i];
+      p.x += p.drift + PTR.nx*.28 + Math.sin(t*p.wave*.3+i)*.18;
+      p.y += p.vy;
+
+      // Orion play button gravity for a portion of the dots.
+      // While the track is actively playing (unmuted), attraction is stronger and more dots get recruited.
+      if (p.mode === 'orion' && targetX && targetY) {
+        const dx = targetX - p.x;
+        const dy = targetY - p.y;
+        const d = Math.hypot(dx, dy) || 1;
+        const forceMul = songActive ? 1.7 : 1.0;
+        const force = (0.55 / (0.7 + d / 95)) * forceMul;
+        p.x += (dx / d) * force;
+        p.y += (dy / d) * force;
+        p.vy *= 0.97;
+
+        const proximity = Math.max(0, 1 - d / 92);
+        p.glow = proximity;
+        if (proximity > 0.02) {
+          // shift to glowing red as they approach the song button
+          p.hue = p.baseHue * (1 - proximity * 0.65) + (3 + proximity * 6);
+          p.sat = p.baseSat * (1 - proximity * 0.25) + 97 * proximity;
+          p.lum = p.baseLum * 0.55 + 60 * proximity + Math.sin(t * 7 + i) * proximity * 9;
+        } else if (p.glow > 0) {
+          p.glow *= 0.65;
+          p.hue = p.baseHue;
+          p.sat = p.baseSat;
+          p.lum = p.baseLum;
+        }
+
+        // when they finally arrive at the song / play button -> explode in tiny red flashing lights
+        if (d < 13 && proximity > 0.65) {
+          spawnExplosion(p.x, p.y, 5 + Math.floor(Math.random() * 4));
+          // reset the dot so it comes back from the top like a new "note"
+          p.x = Math.random() * W;
+          p.y = -6 - Math.random() * 40;
+          p.vy = 0.15 + Math.random() * 0.7;
+          p.glow = 0;
+          p.hue = p.baseHue;
+          p.sat = p.baseSat;
+          p.lum = p.baseLum;
+          if (Math.random() < 0.35) p.mode = 'normal';
+        }
+      } else if (songActive && p.mode !== 'orion' && Math.random() < 0.012) {
+        // while the song is playing, gradually recruit more dots toward it
+        p.mode = 'orion';
+        p.glow = 0;
+      }
+
+      // 3s attraction to cursor after any click (like the Orion song attraction)
+      if (Date.now() < mouseAttractEnd) {
+        const dx = mx - p.x;
+        const dy = my - p.y;
+        const d = Math.hypot(dx, dy) || 1;
+        const force = 1.6 / (0.4 + d / 55);
+        p.x += (dx / d) * force;
+        p.y += (dy / d) * force;
+        // occasional extra pull for "all particles"
+        if (Math.random() < 0.05) {
+          p.x += (dx / d) * 0.8;
+          p.y += (dy / d) * 0.8;
+        }
+      }
+
+      const dm2  = Math.hypot(p.x-mx, p.y-my);
+      const near2 = Math.max(0, 1-dm2/200);
+      ctx.beginPath();
+      let r = p.size * (1 + near2 * .5);
+      let fill = `hsla(${p.hue},${p.sat}%,${p.lum + near2 * 22}%,${p.alpha + near2 * .3})`;
+
+      // glowing red halo for orion dots that are close to the play button
+      if (p.mode === 'orion' && p.glow > 0.08) {
+        r *= (1 + p.glow * 0.55);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r * 2.4, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(5, 100%, 58%, ${p.glow * 0.13})`;
+        ctx.fill();
+        ctx.restore();
+
+        ctx.beginPath();
+        fill = `hsla(5, 96%, 64%, ${p.alpha + p.glow * 0.45})`;
+      }
+
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = fill;
+      ctx.fill();
+
+      if (p.y > H + 8 || p.x < -20 || p.x > W + 20) particles[i] = makeParticle(false);
+    }
+
+    // tiny flashing red sparks / explosions from orion dots arriving at the play button or from clicks
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      const s = sparks[i];
+      s.x += s.vx;
+      s.y += s.vy;
+      s.vy += 0.028;
+      s.vx *= 0.982;
+      s.life -= 1;
+      if (s.life <= 0) {
+        sparks.splice(i, 1);
+        continue;
+      }
+      const lifeT = s.life / 26;
+      const tw = 0.65 + Math.sin(t * 22 + i * 1.3) * 0.35 * lifeT;
+      const rr = s.size * (0.55 + lifeT * 1.3);
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, rr, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${s.hue},${s.sat}%,${s.lum}%,${lifeT * tw * 0.92})`;
+      ctx.fill();
+      // extra bright flash core for "flashing lights" effect
+      if ((s.life & 3) === 0 || Math.random() < 0.22) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, rr * 0.35, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(3,100%,82%,${lifeT * 0.75})`;
+        ctx.fill();
+      }
+    }
+
+    if (Math.random() < .004) {
+      ctx.fillStyle = `rgba(180,60,10,${.015+Math.random()*.03})`;
+      ctx.fillRect(0, Math.random()*H, W, Math.random()*2+.5);
+    }
+
+    const vig = ctx.createRadialGradient(W/2,H/2,H*.2,W/2,H/2,H*.85);
+    vig.addColorStop(0,'rgba(0,0,0,0)');
+    vig.addColorStop(1,'rgba(0,0,0,.72)');
+    ctx.fillStyle = vig;
+    ctx.fillRect(0,0,W,H);
+
+    // draw tiny custom cursor last (on top of everything)
+    drawTinyCursor(mx, my, shineIntensity);
+  }
+
+  // Visual burst on the Orion play button when touched/clicked (pairs with the audio toggle)
+  const orionEl = document.getElementById('orion-player');
+  if (orionEl) {
+    orionEl.addEventListener('click', () => {
+      if (!targetX || !targetY) updateTarget();
+      const cx = targetX || (W * 0.5);
+      const cy = targetY || (H * 0.42);
+      spawnExplosion(cx, cy, 13);
+      // a few satellite flashes around the button for a nice pop
+      for (let k = 0; k < 4; k++) {
+        spawnExplosion(
+          cx + (Math.random() - 0.5) * 52,
+          cy + (Math.random() - 0.5) * 28,
+          4
+        );
+      }
+    }, { passive: true });
+  }
+
+  window.addEventListener('resize', resize, {passive:true});
+  resize();
+  updateTitleEffect();
+  draw();
+})();
+
+// --- Orion auto-play + custom player (minimal, fits aesthetic) ---
+// Starts *automatically* (muted) so the track is heard with zero extra clicks on most visits.
+// First user gesture (click/tap/keydown/mousemove) unmutes it. Manual play always gives sound.
+(function(){
+  const playerEl = document.getElementById('orion-player');
+  const btn = document.getElementById('play-btn');
+  const timeEl = document.getElementById('time');
+  if (!playerEl || !btn || !timeEl) return;
+
+  const audio = new Audio('Orion%20-%20edomite.mp3');
+  audio.preload = 'none'; // defer heavy 14MB fetch until playback actually begins
+
+  let isPlaying = false;
+  let userPaused = false;
+  let durationStr = '';
+
+  function fmt(t) {
+    if (!isFinite(t) || t <= 0) return '--:--';
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function updateUI() {
+    const isMuted = audio.muted && isPlaying;
+    playerEl.classList.toggle('playing', isPlaying);
+    playerEl.classList.toggle('muted', isMuted);
+
+    let glyph = '▶';
+    let label = 'Play Orion';
+    if (isPlaying) {
+      glyph = isMuted ? '🔇' : '⏸';
+      label = isMuted ? 'Unmute Orion (click anywhere for sound)' : 'Pause Orion';
+    }
+    btn.textContent = glyph;
+    btn.setAttribute('aria-label', label);
+  }
+
+  function updateTime() {
+    if (!timeEl) return;
+    const cur = fmt(audio.currentTime);
+    const dur = durationStr || (audio.duration ? fmt(audio.duration) : '');
+    timeEl.textContent = dur ? (cur + ' / ' + dur) : (cur !== '--:--' ? cur : '—');
+  }
+
+  audio.addEventListener('loadedmetadata', () => {
+    durationStr = fmt(audio.duration);
+    updateTime();
+  });
+  audio.addEventListener('timeupdate', updateTime);
+  audio.addEventListener('play', () => { isPlaying = true; updateUI(); });
+  audio.addEventListener('pause', () => { isPlaying = false; updateUI(); });
+  audio.addEventListener('volumechange', updateUI); // catches mute/unmute
+  audio.addEventListener('ended', () => {
+    isPlaying = false;
+    userPaused = true;
+    updateUI();
+    if (durationStr) timeEl.textContent = durationStr;
+  });
+  audio.addEventListener('error', (e) => {
+    timeEl.textContent = 'err';
+    console.warn('Audio error for Orion track', e);
+  });
+
+  function togglePlay(e) {
+    if (e) e.stopPropagation();
+    if (audio.paused) {
+      userPaused = false;
+      audio.muted = false; // explicit user action on the button => deliver sound
+      audio.play().then(() => {
+        isPlaying = true;
+        updateUI();
+      }).catch(err => {
+        console.warn('Playback start blocked or failed:', err);
+        const prev = timeEl.textContent;
+        timeEl.textContent = 'click again';
+        setTimeout(() => { if (!isPlaying) timeEl.textContent = prev || '—'; }, 1400);
+      });
+    } else {
+      audio.pause();
+      userPaused = true;
+    }
+  }
+
+  btn.addEventListener('click', togglePlay);
+  // clicking the label / time / area also toggles (and will unmute if needed)
+  playerEl.addEventListener('click', (e) => {
+    if (e.target !== btn) togglePlay();
+  });
+
+  // === TRUE AUTOMATIC START ===
+  // We *always* start muted. This almost always succeeds without a prior gesture.
+  // The first real user interaction anywhere on the page then unmutes instantly.
+  function attemptAutoplayMuted() {
+    if (userPaused) return;
+    audio.muted = true;
+    audio.play().then(() => {
+      isPlaying = true;
+      updateUI();
+    }).catch(() => {
+      // rare total block; gesture handler below will still try
+    });
+  }
+  window.addEventListener('load', () => setTimeout(attemptAutoplayMuted, 650));
+
+  // Unmute + ensure playing on first gesture. We listen to several events so it feels instant.
+  let unlocked = false;
+  function unlockAndUnmute(e) {
+    if (unlocked) return;
+    unlocked = true;
+
+    const wasMuted = audio.muted;
+    if (wasMuted) {
+      audio.muted = false;
+    }
+
+    if (!isPlaying && !userPaused && audio.paused) {
+      audio.play().then(() => {
+        isPlaying = true;
+        updateUI();
+      }).catch(() => {});
+    } else if (wasMuted) {
+      // already playing (muted) — just flip to audible
+      updateUI();
+    }
+  }
+
+  // Primary reliable gestures
+  ['click', 'touchstart', 'keydown'].forEach(type => {
+    document.addEventListener(type, unlockAndUnmute, { passive: true, once: false });
+  });
+
+  // Extra: mousemove (the page is heavily mouse-driven for the canvas). This often works
+  // as an activation signal in practice for unmuting after the page is "engaged".
+  let mouseUnmuted = false;
+  window.addEventListener('mousemove', () => {
+    if (mouseUnmuted) return;
+    mouseUnmuted = true;
+    if (audio.muted && !userPaused) {
+      audio.muted = false;
+      if (audio.paused && !isPlaying) {
+        audio.play().then(() => { isPlaying = true; }).catch(()=>{});
+      }
+      updateUI();
+    }
+  }, { passive: true, once: true });
+
+  // Keyboard (space / k) — relaxed so it always works on this page
+  document.addEventListener('keydown', (e) => {
+    if (e.key === ' ' || e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      togglePlay();
+    }
+  });
+
+  // init
+  audio.muted = true;
+  updateUI();
+  timeEl.textContent = '—';
+
+  // Bookings modal helpers (called from nav + modal HTML)
+  window.showBookingsModal = function() {
+    const m = document.getElementById('bookings-modal');
+    if (!m) return;
+    m.style.display = 'flex';
+
+    // Lazy load the RA iframe only when the modal is first opened (perf)
+    const iframe = m.querySelector('iframe');
+    if (iframe && iframe.dataset.src && !iframe.src) {
+      iframe.src = iframe.dataset.src;
+    }
+  };
+  window.hideBookingsModal = function() {
+    const m = document.getElementById('bookings-modal');
+    if (m) m.style.display = 'none';
+  };
+
+  // Wire the nav "bookings" to open the RA events iframe modal
+  const bookingsLink = document.getElementById('bookings-link');
+  if (bookingsLink) {
+    bookingsLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.showBookingsModal();
+    });
+  }
+
+  // Close modal with Escape key (in addition to the X and backdrop click)
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      const m = document.getElementById('bookings-modal');
+      if (m && m.style.display === 'flex') {
+        window.hideBookingsModal();
+      }
+    }
+  });
+})();
+</script>
+
+<!-- Bookings modal with RA events widget -->
+<div id="bookings-modal" onclick="if (event.target.id === 'bookings-modal') hideBookingsModal();">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span>events • bookings</span>
+      <button onclick="hideBookingsModal()" aria-label="Close bookings">close</button>
+    </div>
+    <iframe data-src="https://ra.co/promoters/188173/widget/events?theme=dark" height="650" width="100%" style="border:none" title="Edomite events on Resident Advisor"></iframe>
+  </div>
+</div>
+
+</body>
+</html>
